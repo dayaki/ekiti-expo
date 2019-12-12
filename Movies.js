@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -8,69 +8,109 @@ import {
   TouchableOpacity
 } from "react-native";
 import MovieItem from "./MovieItem";
+import LottieView from "lottie-react-native";
 
-const Movies = () => {
+const Movies = props => {
   const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    fetch(url)
+      .then(data => data.json())
+      .then(response => {
+        setMovies(response.results);
+        console.log("res", response.results);
+      });
+  }, []);
 
   const ApiKey = "3cb3769fd283270e562b5afc5379a7c4";
   const url = `https://api.themoviedb.org/3/movie/popular?api_key=${ApiKey}&language=en-US&page=1`;
 
-  fetch(url)
-    .then(data => data.json())
-    .then(response => {
-      setMovies(response.results);
-    });
+  const openDetails = movie => {
+    props.navigation.navigate("Details", { movie: movie });
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.Intro}>Hello, what do you want to watch?</Text>
-        <TextInput
-          style={styles.search}
-          placeholder="Search"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-        />
-      </View>
-
-      <View style={styles.moviesWrapper}>
-        <View style={styles.movieBox}>
-          <View style={styles.movieNav}>
-            <Text style={styles.movieNavText}>Recommended for you</Text>
-            <TouchableOpacity activeOpacity={0.8}>
-              <Text style={styles.movieNavBtnText}>See all</Text>
-            </TouchableOpacity>
+      {movies.length > 0 ? (
+        <>
+          <View style={styles.header}>
+            <Text style={styles.Intro}>Hello, what do you want to watch?</Text>
+            <TextInput
+              style={styles.search}
+              placeholder="Search"
+              placeholderTextColor="rgba(255,255,255,0.6)"
+            />
           </View>
 
-          <ScrollView horizontal>
-            {movies.map(movie => (
-              <MovieItem
-                key={movie.id}
-                title={movie.original_title}
-                image={movie.poster_path}
-                rating={5}
-              />
-            ))}
-          </ScrollView>
-        </View>
+          <View style={styles.moviesWrapper}>
+            <View style={styles.movieBox}>
+              <View style={styles.movieNav}>
+                <Text style={styles.movieNavText}>Recommended for you</Text>
+                <TouchableOpacity activeOpacity={0.8}>
+                  <Text style={styles.movieNavBtnText}>See all</Text>
+                </TouchableOpacity>
+              </View>
 
-        <View style={styles.movieBox}>
-          <View style={styles.movieNav}>
-            <Text>Top rated</Text>
-            <TouchableOpacity>
-              <Text>See all</Text>
-            </TouchableOpacity>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ paddingLeft: 20 }}
+              >
+                {movies.map(movie => (
+                  <MovieItem
+                    key={movie.id}
+                    title={movie.original_title}
+                    image={movie.poster_path}
+                    rating={5}
+                    onTap={() => openDetails(movie)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+
+            <View style={styles.movieBox}>
+              <View style={styles.movieNav}>
+                <Text style={styles.movieNavText}>Top rated</Text>
+                <TouchableOpacity activeOpacity={0.8}>
+                  <Text>See all</Text>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ paddingLeft: 20 }}
+              >
+                {movies.map(movie => (
+                  <MovieItem
+                    key={movie.id}
+                    title={movie.original_title}
+                    image={movie.poster_path}
+                    rating={5}
+                    onTap={() => openDetails(movie)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
           </View>
-
-          <ScrollView horizontal>
-            <MovieItem title="Demo" rating={5} />
-            <MovieItem title="Demo" rating={5} />
-            <MovieItem title="Demo" rating={5} />
-            <MovieItem title="Demo" rating={5} />
-          </ScrollView>
+        </>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+        >
+          <LottieView
+            autoPlay
+            loop
+            source={require("./assets/animation.json")}
+          ></LottieView>
         </View>
-      </View>
+      )}
     </View>
   );
+};
+
+Movies.navigationOptions = {
+  headerShown: false
 };
 
 const styles = StyleSheet.create({

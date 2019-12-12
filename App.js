@@ -1,14 +1,20 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import Login from "./Login";
-import Todo from "./Todo";
-import Fondle from "./Fondle";
-import Account from "./Account";
-import Mansion from "./Mansion";
 import Movies from "./Movies";
+import MovieDetails from "./MovieDetails";
+import Fondle from "./Fondle";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
-const App = () => {
-  return <Movies />;
-};
+const AppNavigator = createStackNavigator({
+  Movies: {
+    screen: Movies
+  },
+  Details: {
+    screen: MovieDetails
+  },
+  DogPage: {
+    screen: Fondle
+  }
+});
 
-export default App;
+export default createAppContainer(AppNavigator);

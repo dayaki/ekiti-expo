@@ -1,17 +1,24 @@
 import React from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+import { IoIosStar } from "react-icons/io";
 
 const MovieItem = props => {
   return (
     <View>
-      <TouchableOpacity style={styles.posterWrapper}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.posterWrapper}
+        onPress={props.onTap}
+      >
         <Image
           style={styles.poster}
-          source={{ uri: `http://image.tmdb.org/t/p/w185/${props.image}` }}
+          source={{ uri: `http://image.tmdb.org/t/p/w500/${props.image}` }}
         />
       </TouchableOpacity>
       <Text style={styles.movieTitle}>{props.title}</Text>
-      {/* <Text>{props.rating}</Text> */}
+      {/* <View style={styles.raitng}>
+        <IoIosStar />
+      </View> */}
     </View>
   );
 };
@@ -21,14 +28,15 @@ const styles = StyleSheet.create({
     marginRight: 20
   },
   poster: {
-    width: 130,
-    height: 130,
+    width: 150,
+    height: 200,
     borderRadius: 10
   },
   movieTitle: {
     fontSize: 18,
     color: "#fff",
-    marginTop: 30
+    marginTop: 10,
+    width: "60%"
   }
 });
 
