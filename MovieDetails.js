@@ -34,7 +34,22 @@ const MovieDetails = props => {
           <TouchableOpacity style={styles.watchBtn}>
             <Text style={styles.watchBtnText}>Watch now</Text>
           </TouchableOpacity>
-          <FontAwesome name="star" size={25} color="yellow" />
+          {movie.vote_average < 3 && (
+            <FontAwesome name="star" size={20} color="yellow" />
+          )}
+          {movie.vote_average >= 3 && (
+            <>
+              <FontAwesome name="star" size={20} color="yellow" />
+              <FontAwesome name="star" size={20} color="yellow" />
+            </>
+          )}
+          {movie.vote_average >= 4 && (
+            <>
+              <FontAwesome name="star" size={20} color="yellow" />
+              <FontAwesome name="star" size={20} color="yellow" />
+              <FontAwesome name="star" size={20} color="yellow" />
+            </>
+          )}
         </View>
         <Text style={styles.movieText}>{movie.overview}</Text>
         <Text style={styles.movieStat}>Release Date: {movie.release_date}</Text>
